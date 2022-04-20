@@ -8,15 +8,19 @@ const data = [
   322, 107,
 ].sort((a, b) => a - b);
 console.log(data);
+const avg = data.reduce((acc, curr) => acc + curr, 0) / data.length;
+console.log(avg);
 
-const step = 90;
-const range = Array.from(Array(11).keys()).map((i) => i * step);
+const step = data.slice(-1)[0] / 10;
+const range = Array.from(Array(10).keys()).map((i) => i * step);
 console.log(range);
 
 let f = [];
-for (let i = 0; i < range.length - 1; i++) {
+for (let i = 0; i < range.length; i++) {
   f.push(
-    data.filter((item) => item > range[i] && item <= range[i + 1]).length /
+    data.filter(
+      (item) => item > range[i] && (!range[i + 1] || item <= range[i + 1])
+    ).length /
       (data.length * step)
   );
 }
@@ -29,26 +33,23 @@ const d = (p[0] - 0.84) / (p[0] - 1);
 console.log(d);
 console.log(step - step * d);
 
-const index = range.filter((item) => item + step < 511).slice(0, -1).length;
+let temp = range.map((item) => item + step).filter((item) => item < 511);
+let index = temp.length;
 const P511 =
   1 -
-  (range
-    .filter((item) => item + step < 511)
-    .slice(0, -1)
-    .reduce((acc, _, i) => acc + f[i] * step, 0) +
-    f[index] * (511 - range[index + 1]));
-console.log(P511);
+  (temp.slice(0, -1).reduce((acc, _, i) => acc + f[i] * step, 0) +
+    f[index] * (511 - range[index]));
+console.log("p511 = ", P511);
+console.log(f[index] / P511);
 
-const index2 = range.filter((item) => item + step < 488).slice(0, -1).length;
+temp = range.map((item) => item + step).filter((item) => item < 488);
+index = temp.length;
 const P488 =
   1 -
-  (range
-    .filter((item) => item + step < 511)
-    .slice(0, -1)
-    .reduce((acc, _, i) => acc + f[i] * step, 0) +
-    f[index] * (488 - range[index2]));
+  (temp.slice(0, -1).reduce((acc, _, i) => acc + f[i] * step, 0) +
+    f[index] * (488 - range[index]));
 
+console.log("p488 = ", P488);
 // console.log(f[index]);
 // console.log(range.filter((item) => item + step < 511).slice(0, -1));
-console.log(f[index] / P511);
-console.log(f[index2] / P488);
+console.log(f[index] / P488);
