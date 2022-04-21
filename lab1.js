@@ -12,11 +12,11 @@ const avg = data.reduce((acc, curr) => acc + curr, 0) / data.length;
 console.log(avg);
 
 const step = data.slice(-1)[0] / 10;
-const range = Array.from(Array(10).keys()).map((i) => i * step);
+const range = Array.from(Array(11).keys()).map((i) => i * step);
 console.log(range);
 
 let f = [];
-for (let i = 0; i < range.length; i++) {
+for (let i = 0; i < range.length - 1; i++) {
   f.push(
     data.filter(
       (item) => item > range[i] && (!range[i + 1] || item <= range[i + 1])
@@ -26,7 +26,11 @@ for (let i = 0; i < range.length; i++) {
 }
 console.log(f);
 
-const p = f.map((item) => 1 - item * step);
+let sum = 0;
+let p = [];
+for (const item of f) {
+  p.push(1 - (sum += item * step));
+}
 console.log(p);
 
 const d = (p[0] - 0.84) / (p[0] - 1);
@@ -37,7 +41,7 @@ let temp = range.map((item) => item + step).filter((item) => item < 511);
 let index = temp.length;
 const P511 =
   1 -
-  (temp.slice(0, -1).reduce((acc, _, i) => acc + f[i] * step, 0) +
+  (temp.reduce((acc, _, i) => acc + f[i] * step, 0) +
     f[index] * (511 - range[index]));
 console.log("p511 = ", P511);
 console.log(f[index] / P511);
@@ -46,7 +50,7 @@ temp = range.map((item) => item + step).filter((item) => item < 488);
 index = temp.length;
 const P488 =
   1 -
-  (temp.slice(0, -1).reduce((acc, _, i) => acc + f[i] * step, 0) +
+  (temp.reduce((acc, _, i) => acc + f[i] * step, 0) +
     f[index] * (488 - range[index]));
 
 console.log("p488 = ", P488);
